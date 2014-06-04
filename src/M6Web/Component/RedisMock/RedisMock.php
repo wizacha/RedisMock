@@ -409,6 +409,16 @@ class RedisMock
         return $this->returnPipedInfo((int) $isNew);
     }
 
+    public function hsetnx($key, $field, $value)
+    {
+        $this->deleteOnTtlExpired($key);
+        if ($this->hexists($key, $field)) {
+            return false;
+        }
+
+        return $this->hset($key, $field, $value);
+    }
+
     public function hmset($key, $pairs)
     {
         $this->deleteOnTtlExpired($key);
